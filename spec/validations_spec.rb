@@ -3,7 +3,8 @@ require 'spec_helper'
 
 describe 'validates by schema' do
   let(:attributes) do
-    { name: 'Secret',
+    {
+      name: 'Secret',
       model: 'secret-42',
       description: 'Life, the Universe, Everything',
       wheels: 4,
@@ -21,7 +22,8 @@ describe 'validates by schema' do
       data: 'the question'.unpack('b*').to_s,
       parent: Widget.new,
       kind: 'one',
-      list: ['abc']}
+      list: ['abc']
+    }
   end
 
   context 'plain' do
