@@ -58,7 +58,9 @@ class ValidatesBySchema::ValidationOption
   end
 
   def uniqueness
+    unique_index = unique_indexes.first
     {
+      scope: unique_index.columns.reject { |col| col == column.name },
       allow_nil: column.null
     }
   end
