@@ -61,6 +61,7 @@ class ValidatesBySchema::ValidationOption
     unique_index = unique_indexes.first
     {
       scope: unique_index.columns.reject { |col| col == column.name },
+      conditions: -> { where(unique_index.where) },
       allow_nil: column.null
     }
   end
