@@ -53,6 +53,24 @@ class ValidatesBySchema::ValidationOption
     numericality
   end
 
+  def uniqueness?
+    unique_indexes.one?
+  end
+
+  def uniqueness
+    {
+      allow_nil: column.null
+    }
+  end
+
+  def unique_indexes
+    klass
+      .connection
+      .indexes(klass.table_name)
+      .select(&:unique)
+      .select { |index| index.columns.include?(column.name) }
+  end
+
   def array?
     column.respond_to?(:array) && column.array
   end
@@ -88,7 +106,7 @@ class ValidatesBySchema::ValidationOption
   end
 
   def to_hash
-    [:presence, :numericality, :length, :inclusion].inject({}) do |h, k|
+    [:presence, :numericality, :length, :inclusion, :uniqueness].inject({}) do |h, k|
       send(:"#{k}?") ? h.merge(k => send(k)) : h
     end
   end
