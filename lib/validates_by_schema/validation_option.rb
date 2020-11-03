@@ -66,11 +66,13 @@ class ValidatesBySchema::ValidationOption
   end
 
   def unique_indexes
-    klass
-      .connection
-      .indexes(klass.table_name)
-      .select(&:unique)
-      .select { |index| index.columns.include?(column.name) }
+    @unique_indexes ||= begin
+      klass
+        .connection
+        .indexes(klass.table_name)
+        .select(&:unique)
+        .select { |index| index.columns.first == column.name }
+    end
   end
 
   def array?
