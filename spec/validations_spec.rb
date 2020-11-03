@@ -133,6 +133,25 @@ describe 'validates by schema' do
         end
       end
     end
+
+    context 'validates uniqueness' do
+      let(:valid_attributes) do
+        attrs = attributes.dup
+
+        attrs[:list] = nil
+        attrs[:parent_id] = 23
+
+        attrs
+      end
+      let(:model_secret_42) { Widget.new(valid_attributes) }
+      before { model_secret_42.save! }
+
+      context :model do
+        it { should validate_uniqueness_of(:model) }
+        it { should_not allow_value('secret-42').for(:model) }
+        it { should allow_value('secret-23').for(:model) }
+      end
+    end
   end
 
   context 'with except' do
